@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
+
+typedef unsigned short meter_t;
+
+int main(void) {
+    char household_id[32], category[24];
+    unsigned int previous, current;
+    meter_t prev, curr;
+
+    printf("Enter household ID: ");
+    if (scanf("%31s", household_id) != 1) return 1;
+    printf("Enter category (Domestic/Other): ");
+    if (scanf("%23s", category) != 1) return 1;
+    printf("Enter previous reading (0-65535): ");
+    if (scanf("%u", &previous) != 1 || previous > USHRT_MAX) {
+        puts("Invalid previous reading"); return 1;
+    }
+    printf("Enter current reading (0-65535): ");
+    if (scanf("%u", &current) != 1 || current > USHRT_MAX) {
+        puts("Invalid current reading"); return 1;
+    }
+    prev = (meter_t)previous;
+    curr = (meter_t)current;
+    /* 16-bit unsigned subtraction naturally handles rollover. */
+    unsigned int units = (meter_t)(curr - prev);
+
+    printf("\nHousehold ID: %s\n", household_id);
+    printf("Category: %s\n", category);
+    printf("Previous reading: %u\n", (unsigned)prev);
+    printf("Current reading: %u\n", (unsigned)curr);
+    printf("Units consumed: %u\n", units);
+    return 0;
+}
